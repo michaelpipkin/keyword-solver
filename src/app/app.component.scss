@@ -1,0 +1,39 @@
+.container {
+  width: 600px;
+  display: grid;
+  grid-template-columns: max-content max-content;
+  column-gap: 8px;
+  margin: 24px auto;
+}
+
+.title {
+  display: grid;
+  grid-column-start: 1;
+  grid-column-end: span 2;
+  justify-items: center;
+}
+
+.container div input {
+  margin-left: 8px;
+  width: 120px;
+}
+
+.buttons {
+  display: grid;
+  justify-items: center;
+  grid-column-start: 1;
+  grid-column-end: span 2;
+  grid-template-columns: 1fr max-content 1fr;
+}
+
+.buttons button {
+  margin: 8px;
+}
+
+.results {
+  display: grid;
+  justify-items: start;
+  grid-column-start: 1;
+  grid-column-end: span 2;
+  margin-top: 16px;
+}
