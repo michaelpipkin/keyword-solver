@@ -7,12 +7,14 @@
       <mat-label>First letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="firstLetter"
         (blur)="onBlur($event.target, 'firstLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -27,12 +29,14 @@
       <mat-label>Second letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="secondLetter"
         (blur)="onBlur($event.target, 'secondLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -47,12 +51,14 @@
       <mat-label>Third letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="thirdLetter"
         (blur)="onBlur($event.target, 'thirdLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -67,12 +73,14 @@
       <mat-label>Fourth letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="fourthLetter"
         (blur)="onBlur($event.target, 'fourthLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -87,12 +95,14 @@
       <mat-label>Fifth letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="fifthLetter"
         (blur)="onBlur($event.target, 'fifthLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -107,12 +117,14 @@
       <mat-label>Sixth letter</mat-label>
       <input
         matInput
+        #letterTextbox
         type="text"
         [(ngModel)]="sixthLetter"
         (blur)="onBlur($event.target, 'sixthLetter')"
       />
       <button
         matSuffix
+        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
@@ -125,9 +137,18 @@
   <div class="buttons">
     <div></div>
     <div>
-      <button mat-raised-button (click)="onSubmit()">Find Word</button>
-      <button mat-raised-button (click)="onClear()">Clear</button>
-      <button mat-raised-button (click)="onCancel()">Cancel</button>
+      <button #findButton mat-raised-button (click)="onSubmit()">
+        Find Word
+      </button>
+      <button #clearButton mat-raised-button (click)="onClear()">Clear</button>
+      <button
+        #cancelButton
+        disabled="true"
+        mat-raised-button
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
     </div>
     <div></div>
   </div>

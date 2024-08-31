@@ -1,9 +1,20 @@
-import { Component, model, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
+import {
+  MatButton,
+  MatButtonModule,
+  MatIconButton,
+} from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import {
+  Component,
+  ElementRef,
+  model,
+  signal,
+  viewChild,
+  viewChildren,
+} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +43,12 @@ export class AppComponent {
   results = model<string>('');
 
   foundWord = signal<boolean>(false);
+
+  findButton = viewChild.required<MatButton>('findButton');
+  clearButton = viewChild.required<MatButton>('clearButton');
+  cancelButton = viewChild.required<MatButton>('cancelButton');
+  inputs = viewChildren<ElementRef>('letterTextbox');
+  resetButtons = viewChildren<MatIconButton>('resetButton');
 
   onBlur(target: any, letter: string) {
     const value = target.value;
@@ -64,10 +81,20 @@ export class AppComponent {
       return;
     }
     this.foundWord.set(false);
+    this.findButton().disabled = true;
+    this.clearButton().disabled = true;
+    this.cancelButton().disabled = false;
+    this.inputs().forEach((input) => (input.nativeElement.disabled = true));
+    this.resetButtons().forEach((button) => (button.disabled = true));
     await this.findWord(this.abortController.signal).then(() => {
       if (!this.foundWord() && this.results() !== 'Search cancelled.') {
         this.results.set('No valid words found.');
       }
+      this.findButton().disabled = false;
+      this.clearButton().disabled = false;
+      this.cancelButton().disabled = true;
+      this.inputs().forEach((input) => (input.nativeElement.disabled = false));
+      this.resetButtons().forEach((button) => (button.disabled = false));
     });
   }
 
