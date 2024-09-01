@@ -1,12 +1,12 @@
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import {
   MatButton,
   MatButtonModule,
   MatIconButton,
 } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
 import {
   Component,
   ElementRef,
@@ -138,7 +138,7 @@ export class AppComponent {
                   );
                   return;
                 }
-                await this.delay(1000);
+                await this.delay(500);
               }
             }
           }
