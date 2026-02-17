@@ -7,17 +7,17 @@
       <mat-label>First letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="firstLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'firstLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="firstLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -29,17 +29,17 @@
       <mat-label>Second letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="secondLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'secondLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="secondLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -51,17 +51,17 @@
       <mat-label>Third letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="thirdLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'thirdLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="thirdLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -73,17 +73,17 @@
       <mat-label>Fourth letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="fourthLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'fourthLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="fourthLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -95,17 +95,17 @@
       <mat-label>Fifth letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="fifthLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'fifthLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="fifthLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -117,17 +117,17 @@
       <mat-label>Sixth letter</mat-label>
       <input
         matInput
-        #letterTextbox
         type="text"
         [(ngModel)]="sixthLetter"
+        [disabled]="isSearching()"
         (blur)="onBlur($event.target, 'sixthLetter')"
       />
       <button
         matSuffix
-        #resetButton
         mat-icon-button
         aria-label="Clear"
         tabindex="-1"
+        [disabled]="isSearching()"
         (click)="sixthLetter.set('')"
       >
         <mat-icon>close</mat-icon>
@@ -137,14 +137,13 @@
   <div class="buttons">
     <div></div>
     <div>
-      <button #findButton mat-raised-button (click)="onSubmit()">
+      <button mat-raised-button [disabled]="isSearching()" (click)="onSubmit()">
         Find Word
       </button>
-      <button #clearButton mat-raised-button (click)="onClear()">Clear</button>
+      <button mat-raised-button [disabled]="isSearching()" (click)="onClear()">Clear</button>
       <button
-        #cancelButton
-        disabled="true"
         mat-raised-button
+        [disabled]="!isSearching()"
         (click)="onCancel()"
       >
         Cancel

@@ -2,23 +2,18 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 import {
-  MatButton,
-  MatButtonModule,
-  MatIconButton,
-} from '@angular/material/button';
-import {
+  ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  model,
   signal,
-  viewChild,
-  viewChildren,
+  WritableSignal,
 } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatInputModule,
     FormsModule,
@@ -31,39 +26,41 @@ import {
 })
 export class AppComponent {
   title = 'WaPo Keyword Solver';
-  [key: string]: any;
   private abortController: AbortController | null = null;
 
-  firstLetter = model<string>('');
-  secondLetter = model<string>('');
-  thirdLetter = model<string>('');
-  fourthLetter = model<string>('');
-  fifthLetter = model<string>('');
-  sixthLetter = model<string>('');
-  results = model<string>('');
-
+  firstLetter = signal<string>('');
+  secondLetter = signal<string>('');
+  thirdLetter = signal<string>('');
+  fourthLetter = signal<string>('');
+  fifthLetter = signal<string>('');
+  sixthLetter = signal<string>('');
+  results = signal<string>('');
   foundWord = signal<boolean>(false);
+  isSearching = signal<boolean>(false);
 
-  findButton = viewChild.required<MatButton>('findButton');
-  clearButton = viewChild.required<MatButton>('clearButton');
-  cancelButton = viewChild.required<MatButton>('cancelButton');
-  inputs = viewChildren<ElementRef>('letterTextbox');
-  resetButtons = viewChildren<MatIconButton>('resetButton');
+  private readonly letterSignals: Record<string, WritableSignal<string>> = {
+    firstLetter: this.firstLetter,
+    secondLetter: this.secondLetter,
+    thirdLetter: this.thirdLetter,
+    fourthLetter: this.fourthLetter,
+    fifthLetter: this.fifthLetter,
+    sixthLetter: this.sixthLetter,
+  };
 
-  onBlur(target: any, letter: string) {
-    const value = target.value;
-    if (value.length > 0) {
-      let transformedText = value
+  onBlur(target: EventTarget | null, letter: string) {
+    const value = (target as HTMLInputElement)?.value;
+    if (value && value.length > 0) {
+      const transformedText = value
         .toUpperCase()
         .replace(/\s/g, '') // Replace all whitespace characters
         .split('')
         .filter(
-          (char: any, index: any, self: string | any[]) =>
+          (char: string, index: number, self: string[]) =>
             self.indexOf(char) === index
         ) // Get unique characters
         .sort()
         .join('');
-      this[letter].set(transformedText);
+      this.letterSignals[letter]?.set(transformedText);
     }
   }
 
@@ -81,30 +78,25 @@ export class AppComponent {
       return;
     }
     this.foundWord.set(false);
-    this.findButton().disabled = true;
-    this.clearButton().disabled = true;
-    this.cancelButton().disabled = false;
-    this.inputs().forEach((input) => (input.nativeElement.disabled = true));
-    this.resetButtons().forEach((button) => (button.disabled = true));
+    this.isSearching.set(true);
     await this.findWord(this.abortController.signal).then(() => {
       if (!this.foundWord() && this.results() !== 'Search cancelled.') {
         this.results.set('No valid words found.');
       }
-      this.findButton().disabled = false;
-      this.clearButton().disabled = false;
-      this.cancelButton().disabled = true;
-      this.inputs().forEach((input) => (input.nativeElement.disabled = false));
-      this.resetButtons().forEach((button) => (button.disabled = false));
+      this.isSearching.set(false);
     });
   }
 
-  async findWord(abortSignal?: AbortSignal) {
+  async findWord(abortSignal?: AbortSignal): Promise<void> {
+    let isFirst = true;
     for (const firstLetter of this.firstLetter().split('')) {
       for (const secondLetter of this.secondLetter().split('')) {
         for (const thirdLetter of this.thirdLetter().split('')) {
           for (const fourthLetter of this.fourthLetter().split('')) {
             for (const fifthLetter of this.fifthLetter().split('')) {
               for (const sixthLetter of this.sixthLetter().split('')) {
+                if (!isFirst) await this.delay(500);
+                isFirst = false;
                 const keyword = `${firstLetter}${secondLetter}${thirdLetter}${fourthLetter}${fifthLetter}${sixthLetter}`;
                 const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${keyword.toLowerCase()}`;
                 try {
@@ -138,7 +130,6 @@ export class AppComponent {
                   );
                   return;
                 }
-                await this.delay(500);
               }
             }
           }
